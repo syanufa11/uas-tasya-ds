@@ -67,6 +67,29 @@ def test_synthetic_quality_structure() -> None:
     assert len(df) == 5
 
 
+def test_theme_css_supports_dark_and_light_modes() -> None:
+    """Verify design tokens and responsive rules are present for both dark and light modes."""
+    dark_css = common.build_theme_css("dark")
+    light_css = common.build_theme_css("light")
+    for css in (dark_css, light_css):
+        assert "--sh-navy:" in css
+        assert "--sh-indigo:" in css
+        assert "--sh-cyan:" in css
+        assert "@media (max-width: 768px)" in css
+    assert "#0B1120" in dark_css
+    assert "#F8FAFC" in light_css
+
+
+def test_tailwind_skill_structure_present() -> None:
+    """Verify tailwind-4-docs skill is installed with required metadata and references."""
+    skill_dir = ROOT / ".github" / "skills" / "tailwind-4-docs"
+    assert (skill_dir / "SKILL.md").is_file()
+    assert (skill_dir / "LICENSE.md").is_file()
+    assert (skill_dir / "references" / "engineering-playbook.md").is_file()
+    assert (skill_dir / "references" / "gotchas.md").is_file()
+    assert (skill_dir / "scripts" / "sync_tailwind_docs.py").is_file()
+
+
 def test_dashboard_app_runs_without_private_data() -> None:
     """Smoke test that dashboard/app.py renders without exceptions in demo mode."""
     app_path = ROOT / "dashboard" / "app.py"

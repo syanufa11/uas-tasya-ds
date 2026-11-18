@@ -74,3 +74,7 @@ Thumbs.db
 *.bak
 *.swp
 *.log
+
+# 6. Tailwind v4 docs snapshot (source-available, lokal saja bila diinisialisasi)
+.github/skills/tailwind-4-docs/references/docs/
+.github/skills/tailwind-4-docs/references/docs-index.tsx

@@ -226,3 +226,44 @@ def test_dashboard_metrics_helpers_deterministic_and_empty_safe() -> None:
     assert summarize_weekday_duration(empty).empty
     assert prepare_consistency_series(empty).empty
     assert len(synthetic_quality_checks()) == 5
+
+
+def test_extended_dashboard_metrics_helpers_and_empty_guards() -> None:
+    from src.samsung_health.metrics import (
+        compute_consistency_metrics,
+        compute_sleep_overview_kpis,
+        format_hour_hhmm,
+        prepare_calendar_heatmap,
+        prepare_weekly_trends,
+        summarize_weekday_vs_weekend,
+    )
+
+    assert format_hour_hhmm(23.5) == "23:30"
+    assert format_hour_hhmm(25.25) == "01:15"
+    assert format_hour_hhmm(float("nan")) == "– : –"
+
+    df = synthetic_sleep_data(days=30, seed=42)
+    kpis = compute_sleep_overview_kpis(df)
+    assert kpis["nights"] == 30
+    assert kpis["weekday_nights"] + kpis["weekend_nights"] == 30
+    assert 3.5 <= float(kpis["avg_duration_h"]) <= 10.0
+
+    cons = compute_consistency_metrics(df)
+    assert all(v >= 0.0 for v in cons.values())
+
+    wknd = summarize_weekday_vs_weekend(df)
+    assert len(wknd) == 2
+
+    weekly = prepare_weekly_trends(df)
+    assert not weekly.empty
+    assert int(weekly["nights"].sum()) == 30
+
+    cal = prepare_calendar_heatmap(df)
+    assert len(cal) == 30
+
+    empty = df.iloc[0:0]
+    assert compute_sleep_overview_kpis(empty)["nights"] == 0
+    assert compute_consistency_metrics(empty)["social_jetlag_min"] == 0.0
+    assert summarize_weekday_vs_weekend(empty).empty
+    assert prepare_weekly_trends(empty).empty
+    assert prepare_calendar_heatmap(empty).empty
