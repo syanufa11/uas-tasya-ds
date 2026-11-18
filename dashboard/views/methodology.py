@@ -13,4 +13,6 @@ def render():
 
 **Privasi:** dashboard berjalan tanpa dataset pribadi; data asli tidak disertakan di repo.
 """)
-    st.caption("Semua grafik saat ini berasal dari generator acak (seed tetap) di `dashboard/common.py`.")
+    st.caption(
+        "Semua grafik saat ini berasal dari generator acak (seed tetap) di `dashboard/common.py`."
+    )

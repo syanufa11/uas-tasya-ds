@@ -32,9 +32,13 @@ uas-tasya-ds/
 ├── .github/
 │   ├── copilot-instructions.md     # Pedoman proyek (CRISP-DM, privasi, reproduktibilitas)
 │   ├── instructions/               # Aturan spesifik Python, notebook, Streamlit, laporan
-│   └── skills/                     # AI Skills modular per tahap CRISP-DM
+│   ├── skills/                     # AI Skills modular per tahap CRISP-DM
+│   └── workflows/
+│       └── ci.yml                  # GitHub Actions CI (lint, pytest, validasi Streamlit, privasi)
+├── .streamlit/
+│   └── config.toml                 # Konfigurasi tema & browser Streamlit (root)
 ├── dashboard/
-│   ├── .streamlit/config.toml      # Konfigurasi tema Streamlit
+│   ├── .streamlit/config.toml      # Konfigurasi tema Streamlit (lokal dashboard)
 │   ├── views/
 │   │   ├── overview.py             # Halaman ringkasan metrik utama
 │   │   ├── patterns.py             # Halaman pola tidur
@@ -44,10 +48,18 @@ uas-tasya-ds/
 │   ├── app.py                      # Entrypoint aplikasi Streamlit
 │   ├── common.py                   # Helper UI & generator data demo sintetis
 │   └── requirements.txt            # Dependensi Python untuk dashboard
+├── docs/
+│   └── deployment.md               # Panduan CI/CD, testing, & Streamlit Community Cloud
 ├── scripts/
-│   └── audit_samsung_health.py     # Skrip audit lokal read-only (output ke data_audit/)
+│   ├── audit_samsung_health.py     # Skrip audit lokal read-only (output ke data_audit/)
+│   └── check_privacy.py            # Pemeriksaan file sensitif & kredensial pada Git
+├── tests/
+│   ├── test_dashboard.py           # Pengujian unit & smoke test dashboard
+│   └── test_privacy.py             # Pengujian guard privasi repositori
 ├── .gitignore                      # Aturan pengecualian data privat & artefak lokal
+├── pyproject.toml                  # Konfigurasi Ruff dan pytest
 ├── README.md                       # Dokumentasi utama project
+├── requirements.txt                # Dependensi utama (kompatibel Streamlit Cloud)
 └── skills-lock.json                # Metadata kunci skills
 ```
 
@@ -103,24 +115,40 @@ Dashboard akan terbuka di browser (default `http://localhost:8501`) dan menampil
 
 ## 7. Cara Menjalankan Pengujian
 
-Saat ini repositori **belum** memiliki suite pengujian unit otomatis (`tests/`). Pemeriksaan yang tersedia saat ini meliputi:
+Jalankan pemeriksaan berikut dari root proyek (tidak memerlukan data Samsung Health pribadi):
 
 - **Pemeriksaan sintaks Python:**
   ```bash
-  python -m py_compile dashboard/app.py dashboard/common.py scripts/audit_samsung_health.py
+  python -m compileall -q dashboard scripts tests
+  ```
+- **Lint dengan Ruff:**
+  ```bash
+  ruff check dashboard tests scripts/check_privacy.py
+  ```
+- **Unit test dan smoke test (`pytest`):**
+  ```bash
+  pytest -v
+  ```
+- **Pemeriksaan privasi & file sensitif sebelum commit:**
+  ```bash
+  python scripts/check_privacy.py
   ```
 - **Menjalankan audit data lokal (hanya jika folder `samsunghealth_*` tersedia secara lokal):**
   ```bash
   python scripts/audit_samsung_health.py
   ```
-- Jika pengujian unit ditambahkan menggunakan `pytest`, jalankan:
-  ```bash
-  pytest
-  ```
 
 ---
 
-## 8. Kebijakan Privasi
+## 8. CI/CD dan Deployment (Streamlit Community Cloud)
+
+- **CI otomatis:** Workflow `.github/workflows/ci.yml` berjalan pada setiap `push` ke `main`, `pull_request` ke `main`, serta `workflow_dispatch` untuk menjalankan pemeriksaan sintaks, Ruff, `pytest`, validasi konfigurasi/import Streamlit, dan guard privasi.
+- **Free Hosting:** Target deployment menggunakan **Streamlit Community Cloud** (`https://share.streamlit.io/`) dengan branch `main` dan entrypoint `dashboard/app.py` (mode demo sintetis, tanpa dataset pribadi).
+- Panduan lengkap arsitektur CI/CD, langkah deployment, pembaruan dashboard, dan troubleshooting tersedia di [docs/deployment.md](docs/deployment.md).
+
+---
+
+## 9. Kebijakan Privasi
 
 Proyek ini menerapkan prinsip *privacy-by-design*:
 

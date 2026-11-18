@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 st.set_page_config(page_title="Sleep Dashboard", page_icon="🌙", layout="wide")
 
-from views import overview, patterns, consistency, quality, methodology  # noqa: E402
+from views import consistency, methodology, overview, patterns, quality  # noqa: E402
 
 pages = [
     st.Page(overview.render, title="Overview", icon="🏠", url_path="overview", default=True),

@@ -1,5 +1,5 @@
 import streamlit as st
-from common import setup, metric_cards, synthetic_quality
+from common import metric_cards, setup, synthetic_quality
 
 
 def render():

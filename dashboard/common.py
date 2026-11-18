@@ -1,7 +1,19 @@
-"""Shared UI helpers and SYNTHETIC demo data (not Samsung Health data)."""
-import numpy as np
+"""Shared UI helpers for the Streamlit sleep dashboard."""
+
+import sys
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from src.samsung_health.metrics import (  # noqa: E402
+    synthetic_quality_checks,
+    synthetic_sleep_data,
+)
 
 DEMO_LABEL = "🧪 DEMO SINTETIS — data acak buatan, BUKAN data Samsung Health asli"
 
@@ -20,7 +32,8 @@ CSS = """
 """
 
 
-def setup(title: str, subtitle: str = ""):
+def setup(title: str, subtitle: str = "") -> None:
+    """Render shared page styles, header, and synthetic demo banner."""
     st.markdown(CSS, unsafe_allow_html=True)
     st.title(title)
     if subtitle:
@@ -28,40 +41,24 @@ def setup(title: str, subtitle: str = ""):
     st.markdown(f'<div class="demo-banner">{DEMO_LABEL}</div>', unsafe_allow_html=True)
 
 
-def metric_cards(items):
-    """items: list of (label, placeholder value). Values are placeholders."""
+def metric_cards(items: list[tuple[str, str]]) -> None:
+    """Render placeholder KPI cards from a list of (label, value) pairs."""
     cols = st.columns(len(items))
-    for c, (k, v) in zip(cols, items):
-        c.markdown(
-            f'<div class="card"><div class="k">{k}</div><div class="v">{v}</div>'
-            f'<div class="t">PLACEHOLDER</div></div>',
+    for col, (label, value) in zip(cols, items, strict=True):
+        col.markdown(
+            f'<div class="card"><div class="k">{label}</div><div class="v">{value}</div>'
+            '<div class="t">PLACEHOLDER</div></div>',
             unsafe_allow_html=True,
         )
 
 
 @st.cache_data
 def synthetic_sleep(days: int = 60, seed: int = 42) -> pd.DataFrame:
-    rng = np.random.default_rng(seed)
-    dates = pd.date_range("2000-01-01", periods=days)  # fake dates
-    bed = 23 + rng.normal(0, 1.0, days)  # hour of day (can exceed 24)
-    dur = np.clip(rng.normal(7, 1.1, days), 3.5, 10)
-    df = pd.DataFrame({"date": dates, "bed_hour": bed, "duration_h": dur})
-    df["wake_hour"] = (df.bed_hour + df.duration_h) % 24
-    df["deep_pct"] = rng.normal(18, 3, days).clip(5, 30)
-    df["rem_pct"] = rng.normal(22, 3, days).clip(8, 35)
-    df["light_pct"] = 100 - df.deep_pct - df.rem_pct
-    df["weekday"] = df.date.dt.day_name()
-    df["is_weekend"] = df.date.dt.dayofweek >= 5
-    return df
+    """Cached wrapper around deterministic synthetic sleep demo data."""
+    return synthetic_sleep_data(days=days, seed=seed)
 
 
 @st.cache_data
 def synthetic_quality() -> pd.DataFrame:
-    return pd.DataFrame(
-        {
-            "Check": ["Missing values", "Duplicate sessions", "Out-of-range duration",
-                      "Timezone inconsistency", "Overlapping sessions"],
-            "Status": ["Belum dihitung"] * 5,
-            "Demo count": [12, 3, 5, 0, 2],
-        }
-    )
+    """Cached wrapper around synthetic quality check table."""
+    return synthetic_quality_checks()

@@ -1,6 +1,6 @@
 import altair as alt
 import streamlit as st
-from common import setup, metric_cards, synthetic_sleep
+from common import metric_cards, setup, synthetic_sleep
 
 
 def render():
