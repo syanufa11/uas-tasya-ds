@@ -106,6 +106,35 @@ Dari root repositori:
 - **Error `ImportError: DLL load failed` pada `pyarrow` di Windows lokal:**
   Pada sebagian sistem Windows dengan kebijakan *Application Control / Smart App Control*, file `.pyd` yang baru diunduh (misalnya `pyarrow/lib.pyd`) dapat diblokir oleh OS. Hal ini tidak memengaruhi runner Linux (`ubuntu-latest`) di GitHub Actions maupun Streamlit Community Cloud.
 
+### Windows: pandas `offsets` atau PyArrow diblokir App Control
+
+Pada environment lokal Python 3.11, pandas 3.1.1 dan PyArrow 26.0.1 gagal dimuat
+dengan pesan `An Application Control policy has blocked this file`. Kombinasi
+pandas 2.2.3 dan PyArrow 19.0.1 berhasil diimpor dan melewati lima pemeriksaan
+dashboard, termasuk Streamlit AppTest. Hasil ini berlaku pada perangkat yang diuji;
+penerimaan wheel tetap bergantung pada kebijakan Windows masing-masing perangkat.
+
+Konfigurasi sekali saja dari root proyek: hentikan Streamlit dengan `Ctrl+C`, lalu
+pasang dependensi Windows tanpa mengubah kebijakan keamanan:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install --only-binary=:all: -r requirements-windows.txt
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -c "import pandas, pyarrow; print(pandas.__version__, pyarrow.__version__)"
+```
+
+Setiap sesi, jalankan dashboard dengan interpreter environment yang sama:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run dashboard/app.py
+```
+
+Mulai ulang proses Streamlit setelah mengganti dependensi agar modul lama tidak
+tetap tersimpan dalam memori. Jika wheel ini juga diblokir, periksa event 3077/3033
+di Event Viewer > Applications and Services Logs > Microsoft > Windows >
+CodeIntegrity > Operational dan gunakan proses persetujuan kebijakan perangkat.
+Lihat [panduan event App Control dari Microsoft](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-id-explanations).
+
 ---
 
 ## 7. Kebijakan Privasi Dataset

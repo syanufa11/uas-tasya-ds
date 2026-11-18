@@ -1,0 +1,5 @@
+# Versi yang telah diuji pada Python 3.11 / Windows dengan App Control aktif.
+# Kebijakan perangkat lain tetap dapat memblokir wheel yang berbeda.
+-r requirements.txt
+pandas==2.2.3
+pyarrow==19.0.1
