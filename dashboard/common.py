@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import html
 import sys
 from pathlib import Path
 
@@ -76,34 +75,18 @@ def build_theme_css(mode: str = "dark") -> str:
   --sh-navy: #0B1120;
   --sh-indigo: #4F46E5;
   --sh-cyan: #06B6D4;
-  --sh-bg: {t['bg']};
-  --sh-sidebar-bg: {t['sidebar_bg']};
-  --sh-surface: {t['surface']};
-  --sh-surface-alt: {t['surface_alt']};
-  --sh-border: {t['border']};
-  --sh-text: {t['text']};
-  --sh-text-muted: {t['text_muted']};
-  --sh-accent: {t['accent']};
-  --sh-accent-2: {t['accent_2']};
+  --sh-bg: {t["bg"]};
+  --sh-sidebar-bg: {t["sidebar_bg"]};
+  --sh-surface: {t["surface"]};
+  --sh-surface-alt: {t["surface_alt"]};
+  --sh-border: {t["border"]};
+  --sh-text: {t["text"]};
+  --sh-text-muted: {t["text_muted"]};
+  --sh-accent: {t["accent"]};
+  --sh-accent-2: {t["accent_2"]};
   --sh-radius-md: 12px;
   --sh-radius-lg: 16px;
-  --sh-shadow: {t['shadow']};
-}}
-.stApp {{
-  background-color: var(--sh-bg);
-  color: var(--sh-text);
-}}
-[data-testid="stSidebar"] {{
-  background-color: var(--sh-sidebar-bg);
-  border-right: 1px solid var(--sh-border);
-}}
-[data-testid="stSidebar"] * {{
-  color: var(--sh-text);
-}}
-.block-container {{
-  padding-top: 1.5rem;
-  padding-bottom: 2.5rem;
-  max-width: 1220px;
+  --sh-shadow: {t["shadow"]};
 }}
 .sh-hero {{
   background: linear-gradient(135deg, rgba(79,70,229,0.16), rgba(6,182,212,0.12));
@@ -129,9 +112,9 @@ def build_theme_css(mode: str = "dark") -> str:
   line-height: 1.45;
 }}
 .demo-banner {{
-  background: {t['banner_bg']};
-  border: 1px solid {t['banner_border']};
-  color: {t['banner_text']};
+  background: var(--sh-surface);
+  border: 1px solid var(--sh-border);
+  color: var(--sh-text);
   padding: 0.65rem 1rem;
   border-radius: var(--sh-radius-md);
   font-size: 0.88rem;
@@ -204,7 +187,6 @@ def build_theme_css(mode: str = "dark") -> str:
   line-height: 1.5;
 }}
 @media (max-width: 768px) {{
-  .block-container {{ padding-left: 1rem; padding-right: 1rem; }}
   .sh-kpi-grid {{ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }}
   .card .v {{ font-size: 1.4rem; }}
 }}
@@ -212,45 +194,70 @@ def build_theme_css(mode: str = "dark") -> str:
 """
 
 
-def _render_sidebar_controls() -> tuple[str, int]:
-    """Render shared sidebar branding, theme toggle, demo window selector, and privacy note."""
-    with st.sidebar:
-        st.markdown(f"### 🌙 {APP_NAME}")
-        st.caption("Modern Health Analytics · UAS Data Science S2")
-        theme_choice = st.radio(
-            "Mode Tampilan",
-            options=["Dark (Navy)", "Light (Slate)"],
-            index=0,
-            key="ui_theme_mode",
-            horizontal=True,
-        )
-        demo_days = st.select_slider(
-            "Rentang Demo Sintetis (hari)",
-            options=[30, 60, 90],
-            value=60,
-            key="demo_days_window",
-        )
-        st.divider()
-        st.caption(
-            "🔒 **Privasi Terjaga:** Mode publik hanya memakai generator acak deterministik "
-            "(`seed=42`) tanpa data Samsung Health pribadi."
-        )
-    mode = "light" if theme_choice.startswith("Light") else "dark"
-    return mode, int(demo_days)
-
-
 def setup(title: str, subtitle: str = "") -> None:
-    """Render shared page styles, sidebar controls, hero header, and synthetic demo banner."""
-    mode, _ = _render_sidebar_controls()
-    st.markdown(build_theme_css(mode), unsafe_allow_html=True)
-    safe_sub = html.escape(subtitle)
-    st.markdown(
-        f'<div class="sh-hero"><div class="sh-brand">{APP_NAME}</div>'
-        f'{f"<p class=sh-hero-sub>{safe_sub}</p>" if safe_sub else ""}</div>',
-        unsafe_allow_html=True,
-    )
+    """Render shared page heading and explicit public demo provenance."""
+    st.caption("SAMSUNG HEALTH / ANALYTICS WORKSPACE")
     st.title(title)
-    st.markdown(f'<div class="demo-banner">{DEMO_LABEL}</div>', unsafe_allow_html=True)
+    if subtitle:
+        st.caption(subtitle)
+    st.info(DEMO_LABEL)
+
+
+def sidebar_controls() -> None:
+    """Entrypoint controls persist across all pages via Streamlit's common frame."""
+    with st.sidebar:
+        st.caption("RESEARCH WORKSPACE · UAS DATA SCIENCE")
+        st.subheader("Health insights", anchor=False)
+        st.caption("Demo publik · 90 hari fiktif pada tahun 2000")
+        st.select_slider(
+            "Rentang Demo Sintetis (hari)", [30, 60, 90], value=60, key="demo_days_window"
+        )
+        st.date_input(
+            "Periode analisis",
+            value=(pd.Timestamp("2000-01-01").date(), pd.Timestamp("2000-03-30").date()),
+            min_value=pd.Timestamp("2000-01-01").date(),
+            max_value=pd.Timestamp("2000-03-30").date(),
+            key="analysis_period",
+        )
+        st.selectbox("Jenis hari", ["Semua", "Hari kerja", "Akhir pekan"], key="day_type")
+        st.caption("Jendela hari dihitung mundur dari akhir periode yang dipilih.")
+        st.divider()
+        st.caption("Tampilan terang/gelap: menu ⋮ → Settings → Appearance.")
+        st.caption("Privasi: hanya generator sintetis. Tidak memuat ekspor pribadi.")
+
+
+@st.cache_data
+def public_dataset() -> pd.DataFrame:
+    from src.samsung_health.dashboard_data import demo_dataset
+
+    return demo_dataset()
+
+
+def analysis_data() -> pd.DataFrame:
+    """Load, validate, and filter the same public series for every analytic page."""
+    from src.samsung_health.dashboard_data import filter_period, validate_dataset
+
+    try:
+        with st.spinner("Menyiapkan data demo…"):
+            frame = public_dataset()
+            validate_dataset(frame)
+        period = st.session_state.get("analysis_period", (frame.date.min(), frame.date.max()))
+        if len(period) != 2:
+            st.info("Lengkapi tanggal awal dan akhir periode.")
+            return frame.iloc[:0]
+        start, end = map(pd.Timestamp, period)
+        if start > end:
+            st.error("Tanggal awal harus mendahului tanggal akhir.")
+            return frame.iloc[:0]
+        start = max(start, end - pd.Timedelta(days=active_demo_days() - 1))
+        result = filter_period(frame, start, end, st.session_state.get("day_type", "Semua"))
+        st.caption(
+            f"Periode aktif: {start:%d %b %Y} – {end:%d %b %Y} · {len(result)} observasi sintetis"
+        )
+        return result
+    except (ValueError, KeyError, TypeError, OSError):
+        st.error("Data demo gagal dimuat atau skemanya tidak valid. Muat ulang halaman.")
+        return pd.DataFrame()
 
 
 def active_demo_days() -> int:
@@ -259,31 +266,19 @@ def active_demo_days() -> int:
 
 
 def metric_cards(items: list[tuple[str, str] | tuple[str, str, str]]) -> None:
-    """Render responsive KPI cards from (label, value) or (label, value, note) tuples."""
-    if not items:
-        return
-    cards_html: list[str] = ['<div class="sh-kpi-grid">']
-    for item in items:
-        label = html.escape(str(item[0]))
-        value = html.escape(str(item[1]))
-        note = html.escape(str(item[2])) if len(item) > 2 else "DEMO SINTETIS"
-        cards_html.append(
-            f'<div class="card"><div class="k">{label}</div>'
-            f'<div class="v">{value}</div><div class="t">{note}</div></div>'
-        )
-    cards_html.append("</div>")
-    st.markdown("".join(cards_html), unsafe_allow_html=True)
+    """Responsive native cards follow the selected theme, including on first load."""
+    with st.container(horizontal=True):
+        for item in items:
+            with st.container(width=220, border=True):
+                st.metric(str(item[0]), str(item[1]))
+                st.caption(str(item[2]) if len(item) > 2 else "DEMO SINTETIS")
 
 
 def section_header(title: str, description: str = "") -> None:
     """Render a consistent section header with optional muted description."""
-    safe_t = html.escape(title)
-    safe_d = html.escape(description)
-    st.markdown(
-        f'<div class="sh-section"><h3>{safe_t}</h3>'
-        f'{f"<p>{safe_d}</p>" if safe_d else ""}</div>',
-        unsafe_allow_html=True,
-    )
+    st.subheader(title, anchor=False)
+    if description:
+        st.caption(description)
 
 
 def empty_state(message: str = "Data tidak tersedia untuk filter yang dipilih.") -> None:

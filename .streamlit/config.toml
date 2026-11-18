@@ -1,9 +1,24 @@
 [theme]
+font = "sans serif"
+baseRadius = "0.75rem"
+showWidgetBorder = true
+showSidebarBorder = true
+
+[theme.light]
 primaryColor = "#4F46E5"
+backgroundColor = "#F8FAFC"
+secondaryBackgroundColor = "#EEF2FF"
+textColor = "#0F172A"
+borderColor = "#CBD5E1"
+chartCategoricalColors = ["#4F46E5", "#0891B2", "#BE123C", "#047857"]
+
+[theme.dark]
+primaryColor = "#818CF8"
 backgroundColor = "#0B1120"
 secondaryBackgroundColor = "#131C31"
 textColor = "#F1F5F9"
-font = "sans serif"
+borderColor = "#334155"
+chartCategoricalColors = ["#818CF8", "#22D3EE", "#FB7185", "#34D399"]
 
 [browser]
 gatherUsageStats = false

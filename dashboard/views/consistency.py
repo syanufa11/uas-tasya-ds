@@ -4,12 +4,11 @@ import altair as alt
 import streamlit as st
 from common import (
     PALETTE,
-    active_demo_days,
+    analysis_data,
     empty_state,
     metric_cards,
     section_header,
     setup,
-    synthetic_sleep,
 )
 
 from src.samsung_health.metrics import (
@@ -23,10 +22,10 @@ from src.samsung_health.metrics import (
 def render() -> None:
     """Render sleep consistency page using separated analysis helpers."""
     setup(
-        "Sleep Consistency",
+        "Sleep Analytics",
         "Variasi jadwal tidur, tren mingguan, dan kalender aktivitas tidur (mode demo sintetis).",
     )
-    df = synthetic_sleep(days=active_demo_days())
+    df = analysis_data()
     if df.empty:
         empty_state("Data demo tidur kosong.")
         return
@@ -46,9 +45,7 @@ def render() -> None:
         "Fluktuasi waktu mulai tidur (indigo) dan waktu bangun (cyan) sepanjang periode.",
     )
     long = prepare_consistency_series(df)
-    long["event_label"] = long["event"].map(
-        {"bed_hour": "Jam Tidur", "wake_hour": "Jam Bangun"}
-    )
+    long["event_label"] = long["event"].map({"bed_hour": "Jam Tidur", "wake_hour": "Jam Bangun"})
     st.altair_chart(
         alt.Chart(long)
         .mark_line(point=True, strokeWidth=2)
@@ -70,7 +67,7 @@ def render() -> None:
             ],
         )
         .properties(height=280),
-        use_container_width=True,
+        width="stretch",
     )
 
     c1, c2 = st.columns(2)
@@ -101,7 +98,7 @@ def render() -> None:
                 ],
             )
             .properties(height=260),
-            use_container_width=True,
+            width="stretch",
         )
 
     with c2:
@@ -134,5 +131,5 @@ def render() -> None:
                 ],
             )
             .properties(height=260),
-            use_container_width=True,
+            width="stretch",
         )

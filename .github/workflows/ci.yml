@@ -53,8 +53,8 @@ jobs:
               assert 'theme' in data, f'Missing [theme] in {cfg}'
 
           sys.path.insert(0, str(Path('dashboard').resolve()))
-          from views import consistency, methodology, overview, patterns, quality
-          assert all(hasattr(v, 'render') for v in (overview, patterns, consistency, quality, methodology))
+          from views import activity, methodology, overview, quality, relationship, sleep
+          assert all(hasattr(v, 'render') for v in (overview, sleep, activity, relationship, quality, methodology))
 
           at = AppTest.from_file('dashboard/app.py')
           at.run(timeout=30)

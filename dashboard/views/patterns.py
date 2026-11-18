@@ -5,11 +5,10 @@ import pandas as pd
 import streamlit as st
 from common import (
     PALETTE,
-    active_demo_days,
+    analysis_data,
     empty_state,
     section_header,
     setup,
-    synthetic_sleep,
 )
 
 from src.samsung_health.metrics import (
@@ -22,13 +21,13 @@ from src.samsung_health.metrics import (
 def render() -> None:
     """Render sleep patterns page using separated analysis helpers."""
     setup(
-        "Sleep Patterns",
+        "Sleep Analytics",
         (
             "Distribusi durasi tidur, pola jam tidur–bangun, "
             "serta perbandingan hari kerja dan akhir pekan."
         ),
     )
-    df = synthetic_sleep(days=active_demo_days())
+    df = analysis_data()
     if df.empty:
         empty_state("Data demo tidur kosong.")
         return
@@ -54,7 +53,7 @@ def render() -> None:
             .mark_rule(color=PALETTE["cyan_bright"], strokeDash=[5, 4], strokeWidth=2)
             .encode(x="mean_h:Q")
         )
-        st.altair_chart((hist + mean_rule).properties(height=270), use_container_width=True)
+        st.altair_chart((hist + mean_rule).properties(height=270), width="stretch")
 
     with c2:
         section_header(
@@ -74,7 +73,7 @@ def render() -> None:
                 ],
             )
             .properties(height=270),
-            use_container_width=True,
+            width="stretch",
         )
 
     c3, c4 = st.columns(2)
@@ -118,7 +117,7 @@ def render() -> None:
                 ],
             )
             .properties(height=270),
-            use_container_width=True,
+            width="stretch",
         )
 
     with c4:
@@ -144,11 +143,11 @@ def render() -> None:
                 ),
             )
             .properties(height=270),
-            use_container_width=True,
+            width="stretch",
         )
 
     section_header("Ringkasan Statistik Hari Kerja vs Akhir Pekan (Demo)")
-    st.dataframe(summarize_weekday_vs_weekend(df), use_container_width=True, hide_index=True)
+    st.dataframe(summarize_weekday_vs_weekend(df), width="stretch", hide_index=True)
     st.caption(
         "Catatan: Tahapan tidur (REM/Deep), Sleep Score, dan Sleep Efficiency tidak ditampilkan "
         "karena belum didukung oleh skema dataset Samsung Health yang diaudit."

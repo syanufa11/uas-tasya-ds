@@ -77,7 +77,11 @@ def test_theme_css_supports_dark_and_light_modes() -> None:
         assert "--sh-cyan:" in css
         assert "@media (max-width: 768px)" in css
     assert "#0B1120" in dark_css
+    # Native Streamlit themes own widget/card colors; the legacy CSS helper is retained.
     assert "#F8FAFC" in light_css
+    config = tomllib.loads((ROOT / ".streamlit/config.toml").read_text(encoding="utf-8"))
+    assert config["theme"]["light"]["backgroundColor"] == "#F8FAFC"
+    assert config["theme"]["dark"]["backgroundColor"] == "#0B1120"
 
 
 def test_tailwind_skill_structure_present() -> None:

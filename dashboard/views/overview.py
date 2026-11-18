@@ -1,16 +1,15 @@
 """Overview page: KPI summary, sleep duration trend, and period overview."""
 
-import altair as alt
 import pandas as pd
+import plotly.express as px
 import streamlit as st
+from charts import show_chart
 from common import (
-    PALETTE,
-    active_demo_days,
+    analysis_data,
     empty_state,
     metric_cards,
     section_header,
     setup,
-    synthetic_sleep,
 )
 
 from src.samsung_health.metrics import compute_sleep_overview_kpis
@@ -22,7 +21,7 @@ def render() -> None:
         "Overview",
         "Ringkasan KPI tidur, tren durasi harian, dan cakupan periode data (mode demo sintetis).",
     )
-    df = synthetic_sleep(days=active_demo_days())
+    df = analysis_data()
     if df.empty:
         empty_state("Data demo tidur kosong.")
         return
@@ -40,45 +39,26 @@ def render() -> None:
 
     section_header(
         "Tren Durasi Tidur Harian (Demo Sintetis)",
-        "Garis cyan menunjukkan rata-rata bergerak 7 hari; garis putus-putus menandai acuan 7 jam.",
+        "Rata-rata bergerak memakai 7 observasi terakhir setelah filter jenis hari.",
     )
     trend_df = df[["date", "duration_h"]].copy()
     trend_df["rolling_7d"] = trend_df["duration_h"].rolling(7, min_periods=1).mean()
 
-    base = alt.Chart(trend_df).encode(x=alt.X("date:T", title="Tanggal"))
-    area = base.mark_area(
-        line={"color": PALETTE["indigo"], "strokeWidth": 2},
-        color=alt.Gradient(
-            gradient="linear",
-            stops=[
-                alt.GradientStop(color="rgba(79, 70, 229, 0.45)", offset=0),
-                alt.GradientStop(color="rgba(6, 182, 212, 0.05)", offset=1),
-            ],
-            x1=1,
-            x2=1,
-            y1=0,
-            y2=1,
-        ),
-    ).encode(
-        y=alt.Y("duration_h:Q", title="Durasi (jam)", scale=alt.Scale(zero=False)),
-        tooltip=[
-            alt.Tooltip("date:T", title="Tanggal"),
-            alt.Tooltip("duration_h:Q", title="Durasi (jam)", format=".2f"),
-            alt.Tooltip("rolling_7d:Q", title="Rata-rata 7 hari", format=".2f"),
-        ],
-    )
-    rolling_line = base.mark_line(color=PALETTE["cyan_bright"], strokeWidth=2.5).encode(
-        y="rolling_7d:Q"
-    )
-    ref_rule = (
-        alt.Chart(pd.DataFrame({"target": [7.0]}))
-        .mark_rule(color=PALETTE["amber"], strokeDash=[6, 4], strokeWidth=1.5)
-        .encode(y="target:Q")
-    )
-    st.altair_chart(
-        (area + rolling_line + ref_rule).properties(height=310),
-        use_container_width=True,
-    )
+    with st.container(border=True):
+        figure = px.line(
+            trend_df,
+            x="date",
+            y=["duration_h", "rolling_7d"],
+            labels={"date": "Tanggal fiktif", "value": "Durasi (jam)", "variable": "Seri"},
+        )
+        figure.for_each_trace(
+            lambda trace: trace.update(
+                name={"duration_h": "Durasi harian", "rolling_7d": "Rata-rata 7 observasi"}[
+                    trace.name
+                ]
+            )
+        )
+        show_chart(figure, "Durasi tidur sintetis dan rata-rata bergerak 7 observasi")
 
     section_header(
         "Ringkasan Periode Data",
@@ -97,4 +77,4 @@ def render() -> None:
             },
         ]
     )
-    st.dataframe(period_table, use_container_width=True, hide_index=True)
+    st.dataframe(period_table, width="stretch", hide_index=True)

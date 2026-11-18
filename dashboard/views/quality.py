@@ -1,86 +1,52 @@
-"""Data Quality page: missing values, coverage, duplicates/overlaps, and limitations."""
+"""Computed quality checks on the active synthetic sample."""
 
-import altair as alt
 import streamlit as st
-from common import (
-    PALETTE,
-    empty_state,
-    metric_cards,
-    section_header,
-    setup,
-    synthetic_quality,
-)
+from common import analysis_data, empty_state, metric_cards, setup
+
+from src.samsung_health.dashboard_data import CORE_COLUMNS, quality_checks
 
 
 def render() -> None:
-    """Render Data Quality page with synthetic audit checks and explicit limitations."""
-    setup(
-        "Data Quality",
-        (
-            "Ringkasan pemeriksaan nilai hilang, cakupan pencatatan, "
-            "duplikasi, overlap, dan keterbatasan data."
-        ),
-    )
-    qdf = synthetic_quality()
-    if qdf.empty:
-        empty_state("Tabel pemeriksaan kualitas data tidak tersedia.")
+    setup("Data Quality", "Pemeriksaan aktual pada data sintetis yang sedang difilter.")
+    frame = analysis_data()
+    if frame.empty:
+        empty_state()
         return
-
+    checks = quality_checks(frame)
     metric_cards(
         [
-            ("Pemeriksaan Kualitas", f"{len(qdf)} item", "DEMO SINTETIS"),
-            ("Temuan Demo", f"{int(qdf['Demo count'].sum())} kasus", "DEMO SINTETIS"),
-            ("Status Audit Publik", "Mode Sintetis", "TANPA DATA PRIVAT"),
+            ("Kolom inti", str(len(CORE_COLUMNS)), "skema demo tervalidasi - minimal 5"),
+            ("Observasi", str(len(frame)), "sesuai filter aktif"),
+            ("Temuan pemeriksaan", str(checks.Temuan.sum()), "dihitung dari data demo"),
         ]
     )
-
-    c1, c2 = st.columns([1.2, 1])
-    with c1:
-        section_header(
-            "Daftar Pengecekan Kualitas Data (Demo)",
-            "Cakupan: missing values, duplikasi sesi, durasi tidak wajar, zona waktu, dan overlap.",
-        )
-        st.dataframe(qdf, use_container_width=True, hide_index=True)
-
-    with c2:
-        section_header(
-            "Distribusi Temuan Pemeriksaan (Demo)",
-            "Visualisasi jumlah kasus demo per kategori pemeriksaan.",
-        )
-        st.altair_chart(
-            alt.Chart(qdf)
-            .mark_bar(color=PALETTE["indigo"], cornerRadiusTopRight=5, cornerRadiusBottomRight=5)
-            .encode(
-                y=alt.Y("Check:N", sort="-x", title=None),
-                x=alt.X("Demo count:Q", title="Jumlah Kasus (Demo)"),
-                tooltip=["Check:N", "Status:N", "Demo count:Q"],
-            )
-            .properties(height=240),
-            use_container_width=True,
-        )
-
-    section_header(
-        "Keterbatasan Data & Catatan Privasi",
-        "Hal yang perlu diperhatikan saat menafsirkan hasil analisis Samsung Health.",
+    st.dataframe(
+        checks,
+        hide_index=True,
+        width="stretch",
+        alt="Hasil pemeriksaan kualitas data sintetis aktif",
     )
-    st.markdown(
-        """
-        <div class="sh-panel">
-          <h4>Batasan Teknis Ekspor Samsung Health</h4>
-          <ul>
-            <li><strong>Cakupan pencatatan:</strong> Hari tanpa catatan tidak otomatis berarti
-            tidak tidur, melainkan bisa disebabkan perangkat tidak dipakai atau sinkronisasi
-            tertunda.</li>
-            <li><strong>Duplikasi &amp; overlap:</strong> Penggabungan beberapa sumber pelacakan
-            (ponsel dan wearable) dapat memunculkan sesi tumpang tindih yang harus dikarantina
-            saat <em>data cleaning</em>.</li>
-            <li><strong>Zona waktu &amp; offset UTC:</strong> Timestamp lokal dan offset UTC harus
-            divalidasi agar tidak terjadi pergeseran ganda (<em>double-shift</em>).</li>
-            <li><strong>Variabel tidak tersedia:</strong> Metrik REM, Deep Sleep, Sleep Score, dan
-            Sleep Efficiency tidak ditampilkan sebagai hasil aktual sebelum skema dataset teraudit
-            mendukungnya secara penuh.</li>
-          </ul>
-        </div>
-        """,
-        unsafe_allow_html=True,
+    st.caption(
+        "Jumlah temuan dapat mencakup beberapa masalah pada satu baris. "
+        "Pemeriksaan ini tidak membuktikan kualitas ekspor pribadi."
+    )
+    st.subheader("Kamus data demo", anchor=False)
+    st.dataframe(
+        {
+            "Kolom": CORE_COLUMNS,
+            "Definisi": [
+                "Tanggal fiktif",
+                "Durasi interval tidur (jam)",
+                "Jam mulai tidur, dapat melewati 24",
+                "Jam bangun (0-24)",
+                "Langkah harian sintetis",
+                "Menit aktif harian sintetis",
+            ],
+        },
+        hide_index=True,
+        alt="Definisi enam kolom inti sintetis",
+    )
+    st.warning(
+        "Zona waktu, overlap sesi, dan kelayakan dataset asli memerlukan audit lokal. "
+        "Hari tanpa catatan tidak otomatis berarti tidak tidur atau tidak aktif."
     )

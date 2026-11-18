@@ -81,7 +81,7 @@ Dari root repositori:
 4. Pilih branch **`main`**.
 5. Tentukan **Main file path** (entrypoint): **`dashboard/app.py`**.
 6. Klik **Deploy!** untuk melakukan deployment awal dan tunggu hingga proses build dependensi selesai.
-7. Setelah aplikasi berstatus *Running*, buka URL publik yang diberikan oleh Streamlit Community Cloud dan verifikasi bahwa kelima halaman (*Overview*, *Sleep Patterns*, *Sleep Consistency*, *Data Quality*, *Methodology*) tampil normal dengan banner **DEMO SINTETIS**.
+7. Setelah aplikasi berstatus *Running*, buka URL publik yang diberikan oleh Streamlit Community Cloud dan verifikasi bahwa keenam halaman (*Overview*, *Sleep Analytics*, *Physical Activity*, *Sleep & Activity Relationship*, *Data Quality*, *Methodology*) tampil normal dengan banner **DEMO SINTETIS**.
 
 ---
 
@@ -142,3 +142,11 @@ Lihat [panduan event App Control dari Microsoft](https://learn.microsoft.com/en-
 1. **Tanpa data pribadi di GitHub dan hosting:** Folder ekspor `samsunghealth_*/`, `data_audit/`, serta dataset mentah maupun hasil *cleaning* dikecualikan melalui `.gitignore` dan diverifikasi oleh `scripts/check_privacy.py`.
 2. **Data demo sintetis eksplisit:** Hosting publik hanya menjalankan generator data sintetis (`dashboard/common.py`) yang diberi label jelas sebagai demo sintetis, bukan data kesehatan pribadi.
 3. **Tanpa kredensial di repositori:** File `.env`, `secrets.toml`, token, dan kunci privat dilarang masuk ke repositori.
+
+
+## Pembaruan TASK 12
+
+Dataset demo aktif ada di `src/samsung_health/dashboard_data.py`; dashboard tidak
+membaca ekspor pribadi. Dependensi UI minimum Streamlit 1.67 dan Plotly 6.
+Pilih tema melalui Settings > Appearance. Filter tersedia bersama pada sidebar.
+Lihat [bukti QA dan keterbatasan TASK 12](task12-dashboard.md).

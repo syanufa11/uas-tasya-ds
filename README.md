@@ -16,7 +16,7 @@ Proyek Data Science tingkat S2 untuk audit, pembersihan, analisis pola dan konsi
 ## 2. Sumber Data dan Keterbatasannya
 
 - **Sumber data utama**: Ekspor lokal Samsung Health (`samsunghealth_*/`) yang disimpan secara privat di komputer lokal dan **tidak** diunggah ke GitHub.
-- **Data demo dashboard**: Saat ini `dashboard/common.py` menyediakan generator data sintetis (`synthetic_sleep()` dan `synthetic_quality()`) dengan penanda eksplisit bahwa data tersebut adalah **demo sintetis**, bukan data Samsung Health asli.
+- **Data demo dashboard**: `src/samsung_health/dashboard_data.py` menyediakan dataset demo aktif; `dashboard/common.py` mempertahankan helper kompatibilitas (`synthetic_sleep()` dan `synthetic_quality()`) dengan penanda eksplisit bahwa data tersebut adalah **demo sintetis**, bukan data Samsung Health asli.
 - **Keterbatasan data**:
   - Ekspor Samsung Health bersifat personal (*single-subject*), sehingga hasilnya tidak dapat digeneralisasikan ke populasi luas.
   - Skema ekspor Samsung Health memiliki *preamble* khusus (`com.samsung.*`), format waktu campuran (epoch ms/detik maupun string ISO), serta potensi *missing values*, sesi tumpang-tindih (*overlapping*), atau inkonsistensi zona waktu.
@@ -71,7 +71,7 @@ uas-tasya-ds/
 ## 4. Teknologi
 
 - **Bahasa**: Python 3.x
-- **Dashboard & Visualisasi**: Streamlit (`>=1.36`), Altair
+- **Dashboard & Visualisasi**: Streamlit (`>=1.67,<2`), Plotly, Altair
 - **Pengolahan Data**: pandas, NumPy
 - **Kerangka Kerja & Dokumentasi**: CRISP-DM, Git, Markdown
 
@@ -109,7 +109,7 @@ Jalankan perintah berikut dari root proyek:
 streamlit run dashboard/app.py
 ```
 
-Dashboard akan terbuka di browser (default `http://localhost:8501`) dan menampilkan lima halaman navigasi: *Overview*, *Sleep Patterns*, *Sleep Consistency*, *Data Quality*, dan *Methodology* menggunakan data demo sintetis.
+Dashboard akan terbuka di browser (default `http://localhost:8501`) dan menampilkan enam halaman: *Overview*, *Sleep Analytics*, *Physical Activity*, *Sleep & Activity Relationship*, *Data Quality*, dan *Methodology* menggunakan data demo sintetis.
 
 ---
 
@@ -165,3 +165,16 @@ Praktik pengembangan perangkat lunak Python pada AI Skills (`.github/skills/pyth
 
 - Materi instruksional diadaptasi di bawah lisensi **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
 - Contoh kode program mengikuti lisensi **MIT**.
+
+
+## TASK 12 - Dashboard analitik
+
+Skill orisinal `build-admin-panel` tersedia untuk Copilot di `.github/skills/`.
+Dashboard tetap Streamlit dengan Plotly dan analisis Altair yang dipertahankan.
+Filter bersama meliputi periode, jendela hari, dan jenis hari. Tema terang/gelap
+tersedia pada menu Settings > Appearance. Semua angka publik bersifat sintetis;
+korelasi tidak menyatakan sebab-akibat.
+
+Audit lisensi, keputusan Tailwind, desain, dan bukti pengujian dijelaskan dalam
+[catatan TASK 12](docs/task12-dashboard.md). URL hosting produksi belum tercatat;
+verifikasi CI dan tampilan deployment harus dilakukan terpisah.

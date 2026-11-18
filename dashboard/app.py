@@ -14,12 +14,23 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-from views import consistency, methodology, overview, patterns, quality  # noqa: E402
+from common import sidebar_controls  # noqa: E402
+from views import activity, methodology, overview, quality, relationship, sleep  # noqa: E402
+
+sidebar_controls()
 
 pages = [
     st.Page(overview.render, title="Overview", icon="🏠", url_path="overview", default=True),
-    st.Page(patterns.render, title="Sleep Patterns", icon="🌙", url_path="patterns"),
-    st.Page(consistency.render, title="Sleep Consistency", icon="⏱️", url_path="consistency"),
+    st.Page(sleep.render, title="Sleep Analytics", icon=":material/bedtime:", url_path="sleep"),
+    st.Page(
+        activity.render, title="Physical Activity", icon=":material/steps:", url_path="activity"
+    ),
+    st.Page(
+        relationship.render,
+        title="Sleep & Activity Relationship",
+        icon=":material/scatter_plot:",
+        url_path="relationship",
+    ),
     st.Page(quality.render, title="Data Quality", icon="🧹", url_path="quality"),
     st.Page(methodology.render, title="Methodology", icon="📚", url_path="methodology"),
 ]

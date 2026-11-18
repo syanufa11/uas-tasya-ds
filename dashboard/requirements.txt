@@ -1,4 +1,5 @@
-streamlit>=1.36
+streamlit>=1.67,<2
 pandas
 numpy
 altair
+plotly>=6,<7

@@ -51,14 +51,23 @@ def render() -> None:
     ]
 
     for title, body in sections:
-        st.markdown(
-            f'<div class="sh-panel"><h4>{title}</h4><p>{body}</p></div>',
-            unsafe_allow_html=True,
-        )
+        with st.container(border=True):
+            st.subheader(title, anchor=False)
+            st.markdown(body)
 
     section_header("Arsitektur UI & Integrasi Skill")
     st.caption(
-        "Dashboard dibangun dengan Streamlit native + Altair, dipisahkan dari logika analisis di "
+        "Dashboard dibangun dengan Streamlit native + Plotly + Altair. Logika analisis ada di "
         "`src/samsung_health/metrics.py`, serta mengadopsi design tokens modern "
         "(navy, indigo, cyan) dengan dukungan mode gelap dan terang."
+    )
+
+    st.info(
+        "Hubungan aktivitas-tidur bersifat eksploratif. Korelasi bukan sebab-akibat; "
+        "data demo tidak menghasilkan kesimpulan penelitian atau diagnosis."
+    )
+    st.caption(
+        "Kelayakan minimal lima kolom data asli diperiksa lokal melalui "
+        "scripts/check_dashboard_schema.py. Dashboard publik memvalidasi skema "
+        "demo secara terpisah dan tidak membuka data pribadi."
     )
