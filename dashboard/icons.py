@@ -20,7 +20,7 @@ ICONS = frozenset({
 PAGE_ICONS = {
     "Overview": "layout-dashboard", "Sleep Analytics": "moon", "Physical Activity": "footprints",
     "Sleep & Activity Relationship": "chart-no-axes-combined", "Data Quality": "shield-check",
-    "Methodology": "book-open",
+    "Model Evaluation": "flask-conical", "Methodology": "book-open",
 }
 _TAGS = {"svg", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon"}
 _ATTRS = {

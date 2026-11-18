@@ -25,12 +25,13 @@ jobs:
           cache: "pip"
           cache-dependency-path: |
             requirements.txt
+            requirements-modeling.txt
             dashboard/requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pytest ruff
+          pip install -r requirements-modeling.txt pytest ruff
 
       - name: Check Python syntax
         run: python -m compileall -q src dashboard scripts tests

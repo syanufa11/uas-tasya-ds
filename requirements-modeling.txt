@@ -1,0 +1,9 @@
+# Optional local/Colab research environment; dashboard does not require these.
+-r requirements.txt
+scikit-learn==1.7.2
+matplotlib==3.10.8
+nbformat==5.10.4
+nbclient==0.10.2
+ipykernel==7.1.0
+# Windows App Control compatibility verified locally; no policy changes.
+pyzmq==26.3.0; sys_platform == "win32"

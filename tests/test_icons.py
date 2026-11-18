@@ -54,7 +54,7 @@ def test_no_decorative_emoji_or_external_icon_dependencies():
     for path in (ROOT / "dashboard").rglob("*.py"):
         assert not emoji.search(path.read_text(encoding="utf-8")), path.name
     assert set(icons.PAGE_ICONS.values()) <= icons.ICONS
-    assert len(icons.PAGE_ICONS) == 6
+    assert len(icons.PAGE_ICONS) == 7
 
 
 def test_native_navigation_keeps_text_and_disables_emoji_icons():

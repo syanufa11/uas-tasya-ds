@@ -9,6 +9,7 @@ audit_report.md
 # Laporan kelayakan memuat statistik kesehatan pribadi; hanya untuk penggunaan lokal.
 reports/uas_dataset_feasibility.md
 reports/dataset_integration_report.md
+reports/model_evaluation.md
 
 # 3. Dataset mentah dan hasil cleaning
 data/

@@ -191,3 +191,11 @@ korelasi tidak menyatakan sebab-akibat.
 Audit lisensi, keputusan Tailwind, desain, dan bukti pengujian dijelaskan dalam
 [catatan TASK 12](docs/task12-dashboard.md). URL hosting produksi belum tercatat;
 verifikasi CI dan tampilan deployment harus dilakukan terpisah.
+## TASK 16 — Model Machine Learning
+
+Notebook dan pipeline diagnostik tersedia pada
+[`docs/task16-modeling.md`](docs/task16-modeling.md).
+Pelatihan masih tertahan verifikasi kontrak waktu, satuan aktivitas dan target
+sesi berikutnya. Dashboard memiliki halaman **Model Evaluation** dengan status
+metrik belum tersedia; belum ada model terbaik. Laporan dan grafik kesehatan
+aktual hanya disimpan lokal pada direktori yang diabaikan Git.
