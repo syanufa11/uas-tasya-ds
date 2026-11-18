@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "skills": {
+    "jupyter-notebook": {
+      "source": "openai/skills",
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "sourceType": "github",
+      "skillPath": "skills/.curated/jupyter-notebook/SKILL.md",
+      "computedHash": "1c916a3da1adb570021712959aa51f992ed8f9c1de50b79f5eca43fffb0a2c4e"
+    },
+    "jupyter-notebooks": {
+      "source": "openai/plugins",
+      "commit": "985fff07dcefa03e40e8664e24363d10b2bacd44",
+      "sourceType": "github",
+      "skillPath": "plugins/data-analytics/skills/jupyter-notebooks/SKILL.md",
+      "computedHash": "9c9133643e823902f8a3926d5112bb4a33e37318e0961b1b2c718f30f19567a6"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
+      "sourceType": "github",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "2d7f889e6ae93c6c27d699856942c336b5b8644537496987d5571043d059b1dc"
+    }
+  }
+}
