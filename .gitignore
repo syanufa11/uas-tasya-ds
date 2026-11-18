@@ -6,6 +6,8 @@ com.samsung.shealth.*/
 # 2. Data audit privat
 data_audit/
 audit_report.md
+# Laporan kelayakan memuat statistik kesehatan pribadi; hanya untuk penggunaan lokal.
+reports/uas_dataset_feasibility.md
 
 # 3. Dataset mentah dan hasil cleaning
 data/
