@@ -156,3 +156,12 @@ Proyek ini menerapkan prinsip *privacy-by-design*:
 2. **Audit dan hasil olahan bersifat privat:** Seluruh isi `data_audit/`, dataset mentah, maupun dataset hasil *cleaning* tidak pernah di-commit ke Git atau diunggah ke layanan eksternal.
 3. **Pemisahan CSV demo sintetis:** `.gitignore` tidak memblokir `*.csv` secara global agar dataset sintetis yang aman untuk demo tetap dapat dikelola di repositori jika diperlukan, sementara seluruh folder data nyata dan file berpola identitas/kesehatan tetap diblokir.
 4. **Tanpa kredensial atau PII di repositori:** File `.env`, kunci privat, token, serta informasi identitas pribadi (PII) dan kesehatan dilarang masuk ke riwayat Git, log, maupun laporan publik.
+
+---
+
+## 9. Atribusi & Lisensi Referensi
+
+Praktik pengembangan perangkat lunak Python pada AI Skills (`.github/skills/python-*`) diadaptasi dari materi **Intermediate Research Software Development Skills (Python)** oleh [The Carpentries Incubator](https://github.com/carpentries-incubator/python-intermediate-development):
+
+- Materi instruksional diadaptasi di bawah lisensi **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
+- Contoh kode program mengikuti lisensi **MIT**.

@@ -3,14 +3,14 @@
 Jalankan dari root proyek: python scripts/audit_samsung_health.py
 CSV keluaran berisi metadata audit; JSON dalam sel ditujukan untuk dibaca dengan json.loads.
 """
-from pathlib import Path
-from collections import Counter, defaultdict
-from datetime import datetime, timezone, timedelta
 import csv
 import hashlib
 import io
 import json
 import re
+from collections import Counter, defaultdict
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sources = list(ROOT.glob('samsunghealth_*'))
@@ -45,9 +45,9 @@ def date_value(key, v):
             n = float(v)
             # Only plausible epoch ranges, explicit heuristic; never silently localize.
             if 946684800000 <= n <= 4102444800000:
-                return datetime.fromtimestamp(n/1000, timezone.utc).isoformat()
+                return datetime.fromtimestamp(n/1000, UTC).isoformat()
             if 946684800 <= n <= 4102444800:
-                return datetime.fromtimestamp(n, timezone.utc).isoformat()
+                return datetime.fromtimestamp(n, UTC).isoformat()
         except (ValueError, TypeError, OverflowError): pass
     return None
 
@@ -396,7 +396,7 @@ if watch_linked and watch_children:
     for field in ['start_time','end_time']:
         epoch=mv.get(field)
         if epoch:
-            epoch_dt=datetime.fromtimestamp(epoch/1000,timezone.utc).replace(tzinfo=None)
+            epoch_dt=datetime.fromtimestamp(epoch/1000,UTC).replace(tzinfo=None)
             comparisons[field]=(datetime.fromisoformat(rr[key(field)])-epoch_dt).total_seconds()/3600
     report+='\n## 8. Pengujian tambahan basis waktu\n\n'
     report+=f'Selisih timestamp teks sesi rujukan dikurangi UTC dari epoch cache (jam): `{J(comparisons)}`. '
