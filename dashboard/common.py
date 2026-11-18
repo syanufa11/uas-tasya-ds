@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+from icons import PAGE_ICONS, icon_caption, leading_icon, metric_icon, svg
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
@@ -18,7 +19,7 @@ from src.samsung_health.metrics import (  # noqa: E402
 )
 
 APP_NAME = "Samsung Health Sleep Analytics"
-DEMO_LABEL = "🧪 DEMO SINTETIS — data acak buatan, BUKAN data Samsung Health asli"
+DEMO_LABEL = "DEMO SINTETIS — data acak buatan, BUKAN data Samsung Health asli"
 
 PALETTE = {
     "navy": "#0B1120",
@@ -197,10 +198,14 @@ def build_theme_css(mode: str = "dark") -> str:
 def setup(title: str, subtitle: str = "") -> None:
     """Render shared page heading and explicit public demo provenance."""
     st.caption("SAMSUNG HEALTH / ANALYTICS WORKSPACE")
-    st.title(title)
+    leading_icon("page_title", "h1", PAGE_ICONS.get(title, "moon"), 24)
+    with st.container(key="page_title"):
+        st.title(title)
     if subtitle:
         st.caption(subtitle)
-    st.info(DEMO_LABEL)
+    leading_icon("demo_notice", "p", "flask-conical", 20)
+    with st.container(key="demo_notice"):
+        st.info(DEMO_LABEL)
 
 
 def sidebar_controls() -> None:
@@ -209,9 +214,11 @@ def sidebar_controls() -> None:
         st.caption("RESEARCH WORKSPACE · UAS DATA SCIENCE")
         st.subheader("Health insights", anchor=False)
         st.caption("Demo publik · 90 hari fiktif pada tahun 2000")
+        icon_caption("Filter analisis", "sliders-horizontal", "analysis_filter_heading")
         st.select_slider(
             "Rentang Demo Sintetis (hari)", [30, 60, 90], value=60, key="demo_days_window"
         )
+        icon_caption("Kalender pengamatan", "calendar-days", "analysis_calendar_heading")
         st.date_input(
             "Periode analisis",
             value=(pd.Timestamp("2000-01-01").date(), pd.Timestamp("2000-03-30").date()),
@@ -222,7 +229,10 @@ def sidebar_controls() -> None:
         st.selectbox("Jenis hari", ["Semua", "Hari kerja", "Akhir pekan"], key="day_type")
         st.caption("Jendela hari dihitung mundur dari akhir periode yang dipilih.")
         st.divider()
-        st.caption("Tampilan terang/gelap: menu ⋮ → Settings → Appearance.")
+        icon_caption(
+            "Tampilan terang/gelap: menu ⋮ → Settings → Appearance.",
+            "settings", "appearance_help",
+        )
         st.caption("Privasi: hanya generator sintetis. Tidak memuat ekspor pribadi.")
 
 
@@ -270,6 +280,7 @@ def metric_cards(items: list[tuple[str, str] | tuple[str, str, str]]) -> None:
     with st.container(horizontal=True):
         for item in items:
             with st.container(width=220, border=True):
+                st.html(svg(metric_icon(str(item[0])), 24), width="content")
                 st.metric(str(item[0]), str(item[1]))
                 st.caption(str(item[2]) if len(item) > 2 else "DEMO SINTETIS")
 
@@ -283,7 +294,9 @@ def section_header(title: str, description: str = "") -> None:
 
 def empty_state(message: str = "Data tidak tersedia untuk filter yang dipilih.") -> None:
     """Render a consistent empty-state notice."""
-    st.info(f"ℹ️ {message}")
+    leading_icon("empty_notice", "p", "info", 20)
+    with st.container(key="empty_notice"):
+        st.info(message)
 
 
 @st.cache_data

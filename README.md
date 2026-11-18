@@ -70,6 +70,15 @@ uas-tasya-ds/
 
 ## 4. Teknologi
 
+<p>
+  <img src="dashboard/assets/icons/technology/Python-Dark.svg" width="40" height="40" alt="Python">
+  <img src="dashboard/assets/icons/technology/Github-Dark.svg" width="40" height="40" alt="GitHub">
+</p>
+
+Logo teknologi: [Skill Icons](https://github.com/tandpfun/skill-icons), lisensi MIT.
+Ikon antarmuka: [Lucide](https://lucide.dev/), SVG lokal berlisensi ISC dengan
+atribusi Feather. Rincian: [sistem ikon dashboard](docs/icon_system.md).
+
 - **Bahasa**: Python 3.x
 - **Dashboard & Visualisasi**: Streamlit (`>=1.67,<2`), Plotly, Altair
 - **Pengolahan Data**: pandas, NumPy

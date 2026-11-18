@@ -1,0 +1,30 @@
+{
+  "lucide": {
+    "repository": "https://github.com/lucide-icons/lucide",
+    "version": "0.468.0",
+    "icons": [
+      "layout-dashboard",
+      "moon",
+      "footprints",
+      "chart-no-axes-combined",
+      "shield-check",
+      "book-open",
+      "calendar-days",
+      "settings",
+      "sliders-horizontal",
+      "download",
+      "clock",
+      "sunrise",
+      "flask-conical",
+      "info"
+    ]
+  },
+  "skill_icons": {
+    "repository": "https://github.com/tandpfun/skill-icons",
+    "revision": "7f7e691e71aec64e8354bf697835e009d1ad80f8",
+    "icons": [
+      "Python-Dark",
+      "Github-Dark"
+    ]
+  }
+}
