@@ -12,6 +12,10 @@
 - Tulis laporan dalam bahasa Indonesia akademik yang natural; jelaskan metode, bukti, dan keterbatasan secara proporsional.
 - Ikuti pola proyek. Setelah perubahan, laporkan pemeriksaan yang benar-benar dijalankan, hasilnya, dan pekerjaan tersisa; jangan mengklaim pengujian atau deploy tanpa bukti.
 - Gunakan AI Skills di `.github/skills/` hanya ketika relevan dengan tugas saat ini; jangan memuat seluruh skill sekaligus.
+- Untuk presentasi/slide PowerPoint, baca `pptx-presentation/SKILL.md`; untuk keluaran laporan Word, baca `docx-academic-report/SKILL.md`. Path relatif terhadap `.github/skills/`.
+- Pertahankan `academic-report` untuk isi dan bukti penelitian. Terapkan `clear-indonesian-writing` pada narasi dokumen akademik Indonesia; baca `academic-paraphrasing` hanya saat diminta menyunting atau memparafrase teks sumber.
+- Muat hanya skill yang relevan dan referensi teknis yang diperlukan pada langkah tersebut. Jangan otomatis mengaktifkan parafrase saat membuat dokumen baru.
+- Cocokkan isi PPTX dan DOCX dengan artefak analisis yang sama. Jangan membuat hasil, angka, atau sitasi fiktif; tandai data sintetis dan bagian yang belum tersedia. Laporkan validasi struktur, pembukaan aplikasi, dan QA visual secara terpisah.
 - Prioritaskan kode sederhana, modular, dan mudah diuji; hindari *overengineering* dan jangan melakukan refactoring besar tanpa kebutuhan yang jelas.
 - Pertahankan kompatibilitas dengan Google Colab dan Streamlit; pisahkan logika pemrosesan/analisis (`src/`) dari tampilan UI (`dashboard/`).
 - Jangan mengarang hasil pengujian; jalankan `ruff` dan `pytest` berbasis fixture sintetis sesuai perubahan lalu laporkan hasil aktualnya.

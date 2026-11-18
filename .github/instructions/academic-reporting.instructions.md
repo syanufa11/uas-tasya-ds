@@ -5,6 +5,7 @@ applyTo: "reports/**/*.md,reports/**/*.tex,docs/**/*.md,docs/**/*.tex,**/*.qmd,*
 # Pelaporan akademik
 
 - Gunakan bahasa Indonesia akademik yang natural, istilah konsisten, dan struktur CRISP-DM yang sesuai pertanyaan penelitian tingkat S2.
+- Gunakan `clear-indonesian-writing` untuk narasi; `academic-paraphrasing` hanya untuk penyuntingan teks sumber yang diminta. Untuk keluaran `.docx` pilih `docx-academic-report`, dan untuk `.pptx` pilih `pptx-presentation`; jangan memuat seluruh skill sekaligus.
 - Jelaskan sumber/periode data, unit analisis, definisi variabel, pembersihan, pembentukan fitur, pembagian temporal, baseline, metrik, serta prosedur reproduksi yang benar-benar digunakan.
 - Ambil angka, tabel, dan grafik dari artefak analisis terverifikasi. Jika belum tersedia, tandai sebagai belum dihitung; jangan mengisi hasil perkiraan sebagai temuan.
 - Verifikasi keberadaan dan kecocokan referensi terhadap klaim; jangan membuat DOI, judul, penulis, atau sitasi fiktif.
