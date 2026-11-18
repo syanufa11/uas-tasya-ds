@@ -1,6 +1,13 @@
-# Ekspor kesehatan pribadi dan semua turunannya (hanya lokal).
+# 1. Folder ekspor Samsung Health (read-only, hanya lokal)
 samsunghealth_*/
+com.samsung.health.*/
+com.samsung.shealth.*/
+
+# 2. Data audit privat
 data_audit/
+audit_report.md
+
+# 3. Dataset mentah dan hasil cleaning
 data/
 data_raw/
 data_clean/
@@ -15,12 +22,55 @@ artifacts/
 *.feather
 *.pkl
 *.pickle
-*.csv
 *.xlsx
 *.xls
 *.zip
-.ipynb_checkpoints/
-__pycache__/
+*.tar.gz
+*.7z
+
+# Catatan: *.csv TIDAK dikecualikan secara global agar dataset sintetis yang aman
+# untuk demo dapat disertakan di repositori jika diperlukan. CSV mentah, audit,
+# dan hasil cleaning tetap dikecualikan melalui direktori di atas dan pola di bawah.
+
+# 4. File berisi informasi identitas atau kesehatan
+com.samsung.health.*
+com.samsung.shealth.*
+*pii*
+*identity*
+*identitas*
+*personal_data*
+*health_data*
+*user_profile*
+*medical*
+
+# 5. Credential, environment, cache, dan file sementara
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.secret
+*credentials*.json
+secrets.toml
+.streamlit/secrets.toml
+
+venv/
+.venv/
+env/
+.conda/
+
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.bak
+*.swp
+*.log
