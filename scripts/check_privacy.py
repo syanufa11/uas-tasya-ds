@@ -12,6 +12,7 @@ FORBIDDEN_PATH_PATTERNS = (
     re.compile(r"(^|/)com\.samsung\.(s?health)\."),
     re.compile(r"(^|/)data_audit/"),
     re.compile(r"(^|/)audit_report\.md$"),
+    re.compile(r"(^|/)reports/(dataset_integration_report|uas_dataset_feasibility)\.md$"),
     re.compile(r"(^|/)(data|data_raw|data_clean|data_cleaned|data_processed)/"),
     re.compile(r"(^|/)(raw|cleaned|processed|outputs|artifacts)/"),
     re.compile(r"(^|/)\.env($|\.(?!example$))"),

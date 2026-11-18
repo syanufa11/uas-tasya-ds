@@ -1,5 +1,9 @@
 # uas-tasya-ds — Analisis Data Tidur Samsung Health
 
+Pipeline dataset lokal TASK 13: lihat [panduan integrasi](docs/dataset_integration.md).
+CSV asli dan laporan hasil integrasi tetap privat; validasi waktu/satuan yang belum
+selesai ditandai dalam laporan lokal.
+
 Proyek Data Science tingkat S2 untuk audit, pembersihan, analisis pola dan konsistensi tidur, serta visualisasi dashboard berbasis ekspor data pribadi Samsung Health menggunakan kerangka kerja **CRISP-DM** (*Business Understanding, Data Understanding, Data Preparation, Modeling, Evaluation, Deployment*).
 
 ---
